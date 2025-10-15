@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 
 import appCss from "../index.css?url";
+import { css } from "styled-system/css";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -36,7 +37,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <div
+          className={css({
+            width: "100%",
+            maxWidth: "editor",
+            mx: "auto",
+            fontSize: "1.8rem",
+            "2xl": {
+              maxWidth: "editorMax",
+            },
+          })}
+        >
+          {children}
+        </div>
         <TanStackDevtools
           config={{
             position: "bottom-right",

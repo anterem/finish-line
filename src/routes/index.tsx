@@ -17,50 +17,87 @@ function Home() {
     }
   }, []);
 
-  const handleStart = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     navigate({
       to: "/write/$minutes",
       params: { minutes: duration },
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    handleStart();
-  };
-
   return (
-    <div>
-      <h1 className={css({ fontSize: "2rem" })}>Finish line</h1>
-      <form onSubmit={handleSubmit}>
-        <div
+    <div
+      className={css({
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100svh",
+      })}
+    >
+      <div
+        className={css({
+          display: "flex",
+          alignItems: "end",
+          justifyContent: "center",
+          minHeight: "50svh",
+          bg: "gray.900",
+          color: "white",
+          rounded: "xs",
+        })}
+      >
+        <h1
           className={css({
-            display: "flex",
-            alignItems: "baseline",
-            fontSize: "2rem",
+            mt: "8rem",
+            fontSize: "8rem",
+            fontWeight: "regular",
+            textTransform: "lowercase",
           })}
         >
-          I want to write for
-          <input
-            ref={inputRef}
-            type="number"
-            value={duration === 0 ? "" : duration}
-            inputMode="numeric"
-            className={css({
-              width: "10rem",
-              textAlign: "center",
-              p: 4,
-              m: 2,
-            })}
-            autoFocus
-            onChange={(e) => {
-              const value = e.target.value;
-              setDuration(value === "" ? 0 : Number(value));
-            }}
-          />
-          minutes.
-        </div>
-      </form>
+          Finish line
+        </h1>
+      </div>
+      <div
+        className={css({
+          display: "grid",
+          alignItems: "end",
+          minHeight: "25svh",
+          p: "1rem",
+          textAlign: "center",
+        })}
+      >
+        <form onSubmit={handleSubmit}>
+          <p className={css({ fontSize: "2.4rem" })}>
+            I want to write for
+            <input
+              ref={inputRef}
+              type="number"
+              value={duration === 0 ? "" : duration}
+              inputMode="numeric"
+              className={css({
+                width: "8rem",
+                textAlign: "center",
+                fontSize: "1.2em",
+                fontWeight: "bold",
+                px: 2,
+                mx: 4,
+                rounded: "md",
+                bg: "gray.50",
+                focusRing: "none",
+                _focus: {
+                  bg: "gray.100",
+                },
+              })}
+              autoFocus
+              onChange={(e) => {
+                const value = e.target.value;
+                setDuration(value === "" ? 0 : Number(value));
+              }}
+            />
+            minutes.
+          </p>
+          <p>Press enter to start.</p>
+        </form>
+      </div>
+      <div className={css({ minHeight: "25svh" })}></div>
     </div>
   );
 }

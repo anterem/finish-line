@@ -6,7 +6,25 @@ export default defineConfig({
   exclude: [],
   jsxFramework: "react",
   theme: {
-    extend: {},
+    extend: {
+      tokens: {
+        fonts: {
+          transitional: {
+            value:
+              "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;",
+          },
+        },
+        sizes: {
+          editor: { value: "60ch" },
+          editorMax: { value: "80ch" },
+        },
+      },
+    },
+  },
+  globalCss: {
+    body: {
+      fontFamily: "transitional",
+    },
   },
   outdir: "styled-system",
 });
