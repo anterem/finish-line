@@ -24,6 +24,8 @@ export default defineConfig({
   globalCss: {
     body: {
       fontFamily: "transitional",
+      bg: "stone.100",
+      color: "slate.700",
     },
   },
   outdir: "styled-system",

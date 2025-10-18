@@ -59,9 +59,10 @@ function Home() {
           alignItems: "end",
           justifyContent: "center",
           minHeight: "50svh",
-          bg: "gray.900",
-          color: "white",
+          color: "slate.700",
           rounded: "xs",
+          borderBottom: "3px solid black",
+          borderBottomRadius: "xs",
         })}
       >
         <h1
@@ -100,10 +101,10 @@ function Home() {
                 px: 2,
                 mx: 4,
                 rounded: "md",
-                bg: "gray.50",
+                bg: "stone.50",
                 focusRing: "none",
                 _focus: {
-                  bg: "gray.100",
+                  bg: "white",
                 },
               })}
               autoFocus
@@ -114,7 +115,7 @@ function Home() {
             />
             minutes.
           </p>
-          <p>Press enter to start.</p>
+          <p className={css({ p: 2 })}>Press enter to start.</p>
         </form>
       </div>
       <div className={css({ minHeight: "25svh" })}></div>
