@@ -2,15 +2,23 @@ import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 
+const MIN_MINUTES = 1;
+const MAX_MINUTES = 30;
+
 export const Route = createFileRoute("/write/$minutes")({
   params: {
-    parse: (rawParams) => {
-      const minutes = Number(rawParams.minutes);
-      if (!Number.isInteger(minutes) || isNaN(minutes) || minutes < 1) {
-        return { minutes: 3 };
-      }
-      return { minutes };
-    },
+    parse: (rawParams) => ({ minutes: Number(rawParams.minutes) }),
+  },
+  beforeLoad: ({ params }) => {
+    const minutes = params.minutes;
+    if (
+      !Number.isInteger(minutes) ||
+      minutes < MIN_MINUTES ||
+      minutes > MAX_MINUTES
+    ) {
+      // add redirect later
+      throw new Error(`invalid duration: ${params.minutes}`);
+    }
   },
   component: Write,
 });
