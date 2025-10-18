@@ -8,6 +8,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const navigate = useNavigate();
+  const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [duration, setDuration] = useState(3);
 
@@ -15,6 +16,25 @@ function Home() {
     if (inputRef.current) {
       inputRef.current.select();
     }
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter") return;
+      if (
+        formRef.current &&
+        event.target instanceof Element &&
+        !formRef.current.contains(event.target)
+      ) {
+        event.preventDefault();
+        formRef.current.requestSubmit();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +84,7 @@ function Home() {
           textAlign: "center",
         })}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} ref={formRef}>
           <p className={css({ fontSize: "2.4rem" })}>
             I want to write for
             <input
