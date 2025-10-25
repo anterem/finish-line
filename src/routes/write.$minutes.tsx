@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
+import { useCountdown } from "@/hooks/useCountdown";
+import { formatTime } from "@/utils";
 
 const MIN_MINUTES = 1;
 const MAX_MINUTES = 30;
@@ -25,29 +27,15 @@ export const Route = createFileRoute("/write/$minutes")({
 
 function Write() {
   const { minutes } = Route.useParams();
-  const [timeLeft, setTimeLeft] = useState(minutes * 60);
+  const { secondsLeft, start } = useCountdown(minutes * 60);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
+    start();
+  }, []);
 
-    return () => clearInterval(timer);
-  }, [minutes]);
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString()}:${secs.toString().padStart(2, "0")}`;
-  };
   return (
     <>
-      <Header>{formatTime(timeLeft)}</Header>
+      <Header>{formatTime(secondsLeft)}</Header>
     </>
   );
 }
