@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { FlowEditor } from "@/components/FlowEditor";
 import { Header } from "@/components/Header";
 import { useCountdown } from "@/hooks/useCountdown";
 import { formatTime } from "@/utils";
@@ -27,7 +28,10 @@ export const Route = createFileRoute("/write/$minutes")({
 
 function Write() {
   const { minutes } = Route.useParams();
-  const { secondsLeft, start } = useCountdown(minutes * 60);
+  const [complete, setComplete] = useState(false);
+  const { secondsLeft, start } = useCountdown(minutes * 60, () =>
+    setComplete(true),
+  );
 
   useEffect(() => {
     start();
@@ -36,6 +40,7 @@ function Write() {
   return (
     <>
       <Header>{formatTime(secondsLeft)}</Header>
+      <FlowEditor sprintComplete={complete} />
     </>
   );
 }
