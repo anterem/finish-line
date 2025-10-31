@@ -28,12 +28,11 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
     delayTimerRef.current = null;
     if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current);
     timeoutTimerRef.current = null;
+    setIsFading(false);
   };
 
   const restartTimer = () => {
     clearTimers();
-    setIsFading(false);
-
     if (sprintComplete) return;
 
     delayTimerRef.current = setTimeout(() => {
@@ -53,6 +52,10 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
     }
     restartTimer();
   };
+
+  useEffect(() => {
+    if (sprintComplete) clearTimers();
+  }, [sprintComplete]);
 
   useEffect(() => {
     return () => {
