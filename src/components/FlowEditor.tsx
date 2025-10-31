@@ -15,17 +15,27 @@ const BLOCKED_KEYS = new Set([
 ]);
 
 const DELAY_DURATION = 250;
+const TIMEOUT_DURATION = 5000;
 
 export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
+  const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isFading, setIsFading] = useState(false);
 
   const resetTimer = () => {
     if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
+    if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current);
     setIsFading(false);
+
+    if (sprintComplete) return;
 
     delayTimerRef.current = setTimeout(() => {
       setIsFading(true);
+      timeoutTimerRef.current = setTimeout(() => {
+        if (editorRef.current) editorRef.current.value = "";
+        setIsFading(false);
+      }, TIMEOUT_DURATION);
     }, DELAY_DURATION);
   };
 
@@ -40,6 +50,7 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
 
   return (
     <textarea
+      ref={editorRef}
       placeholder="Don't stop typing!"
       onKeyDown={handleKeyDown}
       spellCheck={sprintComplete}
@@ -53,7 +64,7 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
         focusRing: "none",
         opacity: isFading ? 0 : 1,
         transitionProperty: isFading ? "opacity" : "none",
-        transitionDuration: "5s",
+        transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
         transitionTimingFunction: "ease-in-out",
       })}
       autoFocus
