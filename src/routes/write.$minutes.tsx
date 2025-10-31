@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { css } from "styled-system/css";
 import { FlowEditor } from "@/components/FlowEditor";
 import { Header } from "@/components/Header";
 import { useCountdown } from "@/hooks/useCountdown";
@@ -38,9 +39,16 @@ function Write() {
   }, []);
 
   return (
-    <>
+    <div
+      className={css({
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        minH: "100dvh",
+      })}
+    >
       <Header>{formatTime(secondsLeft)}</Header>
       <FlowEditor sprintComplete={complete} />
-    </>
+    </div>
   );
 }

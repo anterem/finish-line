@@ -4,6 +4,7 @@ export function Header({ children }: { children?: React.ReactNode }) {
   return (
     <header
       className={css({
+        flex: "0 0 auto",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
