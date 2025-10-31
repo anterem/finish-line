@@ -30,7 +30,7 @@ export const Route = createFileRoute("/write/$minutes")({
 function Write() {
   const { minutes } = Route.useParams();
   const [complete, setComplete] = useState(false);
-  const { secondsLeft, start } = useCountdown(minutes * 60, () =>
+  const { secondsLeft, start, pause } = useCountdown(minutes * 60, () =>
     setComplete(true),
   );
 
@@ -48,7 +48,7 @@ function Write() {
       })}
     >
       <Header>{formatTime(secondsLeft)}</Header>
-      <FlowEditor sprintComplete={complete} />
+      <FlowEditor sprintComplete={complete} stopCountdown={pause} />
     </div>
   );
 }

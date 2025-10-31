@@ -17,7 +17,13 @@ const BLOCKED_KEYS = new Set([
 const DELAY_DURATION = 250;
 const TIMEOUT_DURATION = 5000;
 
-export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
+export function FlowEditor({
+  sprintComplete,
+  stopCountdown,
+}: {
+  sprintComplete: boolean;
+  stopCountdown: () => void;
+}) {
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -38,8 +44,8 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
     delayTimerRef.current = setTimeout(() => {
       setIsFading(true);
       timeoutTimerRef.current = setTimeout(() => {
-        if (editorRef.current) editorRef.current.value = "";
-        setIsFading(false);
+        stopCountdown();
+        if (editorRef.current) editorRef.current.disabled = true;
       }, TIMEOUT_DURATION);
     }, DELAY_DURATION);
   };
@@ -64,25 +70,36 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
   }, []);
 
   return (
-    <textarea
-      ref={editorRef}
-      placeholder="Don't stop typing!"
-      onKeyDown={handleKeyDown}
-      spellCheck={sprintComplete}
-      className={css({
-        flex: "1 1 auto",
-        width: "100%",
-        minH: "0",
-        marginY: "2rem",
-        boxSizing: "border-box",
-        resize: "none",
-        focusRing: "none",
-        opacity: isFading ? 0 : 1,
-        transitionProperty: isFading ? "opacity" : "none",
-        transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
-        transitionTimingFunction: "ease-in-out",
-      })}
-      autoFocus
-    />
+    <>
+      <textarea
+        ref={editorRef}
+        placeholder="Don't stop typing…"
+        onKeyDown={handleKeyDown}
+        spellCheck={sprintComplete}
+        className={css({
+          flex: "1 1 auto",
+          width: "100%",
+          minH: "0",
+          marginY: "2rem",
+          boxSizing: "border-box",
+          resize: "none",
+          focusRing: "none",
+        })}
+        autoFocus
+      />
+      <div
+        className={css({
+          position: "fixed",
+          inset: 0,
+          background: "slate.700",
+          pointerEvents: "none",
+          opacity: isFading ? 1 : 0,
+          transitionProperty: isFading ? "opacity" : "none",
+          transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
+          transitionTimingFunction: "ease-in-out",
+          zIndex: 1000,
+        })}
+      />
+    </>
   );
 }
