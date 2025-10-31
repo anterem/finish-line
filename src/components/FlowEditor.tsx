@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { css } from "styled-system/css";
 
 const BLOCKED_KEYS = new Set([
@@ -23,9 +23,15 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isFading, setIsFading] = useState(false);
 
-  const resetTimer = () => {
+  const clearTimers = () => {
     if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
+    delayTimerRef.current = null;
     if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current);
+    timeoutTimerRef.current = null;
+  };
+
+  const restartTimer = () => {
+    clearTimers();
     setIsFading(false);
 
     if (sprintComplete) return;
@@ -45,8 +51,14 @@ export function FlowEditor({ sprintComplete }: { sprintComplete: boolean }) {
       e.stopPropagation();
       return;
     }
-    resetTimer();
+    restartTimer();
   };
+
+  useEffect(() => {
+    return () => {
+      clearTimers();
+    };
+  }, []);
 
   return (
     <textarea
