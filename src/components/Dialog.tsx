@@ -25,7 +25,7 @@ export function DialogPortal({
 export function DialogOverlay({
   css: cssProp,
   ...props
-}: { css: Styles } & React.ComponentProps<typeof Dialog.Overlay>) {
+}: { css?: Styles } & React.ComponentProps<typeof Dialog.Overlay>) {
   const style = css(
     {
       position: "fixed",
@@ -42,7 +42,7 @@ export function DialogContent({
   css: cssProp,
   children,
   ...props
-}: { css: Styles } & React.ComponentProps<typeof Dialog.Content>) {
+}: { css?: Styles } & React.ComponentProps<typeof Dialog.Content>) {
   const style = css(
     {
       position: "fixed",
