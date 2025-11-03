@@ -39,10 +39,32 @@ export function DialogOverlay({
 }
 
 export function DialogContent({
+  css: cssProp,
   children,
   ...props
-}: React.ComponentProps<typeof Dialog.Content>) {
-  return <Dialog.Content {...props}>{children}</Dialog.Content>;
+}: { css: Styles } & React.ComponentProps<typeof Dialog.Content>) {
+  const style = css(
+    {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: "90vw",
+      maxWidth: "2xl",
+      maxH: "90vh",
+      maxHeight: "90dvh",
+      padding: "2rem 3rem",
+      backgroundColor: "stone.50",
+      borderRadius: "xs",
+      boxShadow: "md",
+    },
+    cssProp,
+  );
+  return (
+    <Dialog.Content className={style} {...props}>
+      {children}
+    </Dialog.Content>
+  );
 }
 
 export function DialogTitle({
