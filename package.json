@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.13.8",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-router-devtools": "^1.132.0",
@@ -19,6 +20,7 @@
     "@tanstack/react-start": "^1.132.0",
     "@tanstack/router-plugin": "^1.132.0",
     "lucide-react": "^0.544.0",
+    "radix-ui": "^1.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "vite-tsconfig-paths": "^5.1.4"
