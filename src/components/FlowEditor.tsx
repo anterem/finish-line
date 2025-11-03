@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { css } from "styled-system/css";
+import { DialogOverlay, DialogPortal, DialogRoot } from "./Dialog";
 
 const BLOCKED_KEYS = new Set([
   "Backspace",
@@ -87,19 +88,19 @@ export function FlowEditor({
         })}
         autoFocus
       />
-      <div
-        className={css({
-          position: "fixed",
-          inset: 0,
-          background: "slate.700",
-          pointerEvents: "none",
-          opacity: isFading ? 1 : 0,
-          transitionProperty: isFading ? "opacity" : "none",
-          transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
-          transitionTimingFunction: "ease-in-out",
-          zIndex: 1000,
-        })}
-      />
+      <DialogRoot open={true}>
+        <DialogPortal>
+          <DialogOverlay
+            css={{
+              pointerEvents: "none",
+              opacity: isFading ? 1 : 0,
+              transitionProperty: isFading ? "opacity" : "none",
+              transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
+              transitionTimingFunction: "ease-in-out",
+            }}
+          />
+        </DialogPortal>
+      </DialogRoot>
     </>
   );
 }
