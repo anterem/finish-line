@@ -88,15 +88,18 @@ export function FlowEditor({
         })}
         autoFocus
       />
-      <DialogRoot open={true}>
-        <DialogPortal>
+      <DialogRoot open={isFading}>
+        <DialogPortal forceMount>
           <DialogOverlay
             css={{
-              pointerEvents: "none",
-              opacity: isFading ? 1 : 0,
-              transitionProperty: isFading ? "opacity" : "none",
-              transitionDuration: `${TIMEOUT_DURATION / 1000}s`,
-              transitionTimingFunction: "ease-in-out",
+              opacity: 1,
+              _open: {
+                animation: "fadein",
+                animationDuration: `${TIMEOUT_DURATION / 1000}s`,
+                animationTimingFunction: "ease-in-out",
+                animationFillMode: "forwards",
+              },
+              _closed: { display: "none" },
             }}
           />
         </DialogPortal>
