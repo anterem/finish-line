@@ -7,6 +7,12 @@ export default defineConfig({
   jsxFramework: "react",
   theme: {
     extend: {
+      keyframes: {
+        fadein: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
       tokens: {
         fonts: {
           transitional: {
