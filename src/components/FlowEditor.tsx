@@ -130,14 +130,23 @@ export function FlowEditor({
                 padding: "0",
                 color: "stone.300",
                 backgroundColor: "none",
+                fontSize: "1.2rem",
                 boxShadow: "none",
                 animation: "fadein",
                 animationDuration: "2s",
               }}
             >
-              <h1 className={css({ fontSize: "2rem", fontStyle: "italic" })}>
+              <h1
+                className={css({
+                  fontSize: "5rem",
+                  fontStyle: "italic",
+                  lineHeight: 1,
+                  marginBottom: "2rem",
+                })}
+              >
                 {failMessage}
               </h1>
+              <p>You stopped typing for too long.</p>
             </DialogContent>
           )}
         </DialogPortal>
