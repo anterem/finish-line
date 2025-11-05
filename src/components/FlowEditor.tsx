@@ -34,14 +34,17 @@ const MESSAGES = [
 
 export function FlowEditor({
   sprintComplete,
+  startCountdown,
   stopCountdown,
   restart,
 }: {
   sprintComplete: boolean;
+  startCountdown: () => void;
   stopCountdown: () => void;
   restart: () => void;
 }) {
   const navigate = useNavigate();
+  const countdownStarted = useRef(false);
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -77,6 +80,10 @@ export function FlowEditor({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (!countdownStarted.current) {
+      startCountdown();
+      countdownStarted.current = true;
+    }
     if (!sprintComplete && BLOCKED_KEYS.has(e.key)) {
       e.preventDefault();
       e.stopPropagation();

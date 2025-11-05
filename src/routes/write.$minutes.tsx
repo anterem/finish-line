@@ -39,12 +39,7 @@ function Write() {
   const handleReset = () => {
     setKey((prevKey) => prevKey + 1);
     restart();
-    start();
   };
-
-  useEffect(() => {
-    start();
-  }, []);
 
   return (
     <div
@@ -59,6 +54,7 @@ function Write() {
       <Header>{formatTime(secondsLeft)}</Header>
       <FlowEditor
         sprintComplete={complete}
+        startCountdown={start}
         stopCountdown={pause}
         restart={handleReset}
       />
