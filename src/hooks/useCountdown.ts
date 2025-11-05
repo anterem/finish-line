@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export interface UseCountdownReturn {
+export type UseCountdownReturn = {
   secondsLeft: number;
   isRunning: boolean;
   start: () => void;
   pause: () => void;
-}
+  restart: () => void;
+};
 
 export function useCountdown(
   initialSeconds: number,
   onComplete?: () => void,
 ): UseCountdownReturn {
-  const [seconds, setSeconds] = useState(Math.max(0, initialSeconds));
+  const clampedSeconds = Math.max(0, initialSeconds);
+  const [seconds, setSeconds] = useState(clampedSeconds);
   const [isRunning, setIsRunning] = useState(false);
 
   const onCompleteRef = useRef(onComplete);
@@ -26,9 +28,9 @@ export function useCountdown(
   }, [seconds]);
 
   useEffect(() => {
-    setSeconds(Math.max(0, initialSeconds));
-    if (Math.max(0, initialSeconds) === 0) setIsRunning(false);
-  }, [initialSeconds]);
+    setSeconds(clampedSeconds);
+    if (clampedSeconds === 0) setIsRunning(false);
+  }, [clampedSeconds]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -56,10 +58,16 @@ export function useCountdown(
     setIsRunning(false);
   }, []);
 
+  const restart = useCallback(() => {
+    setSeconds(clampedSeconds);
+    setIsRunning(false);
+  }, [initialSeconds]);
+
   return {
     secondsLeft: seconds,
     isRunning,
     start,
     pause,
+    restart,
   };
 }
