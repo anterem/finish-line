@@ -9,8 +9,10 @@ export function Header({ children }: { children?: React.ReactNode }) {
         alignItems: "center",
         justifyContent: "space-between",
         py: 4,
-        borderBottom: "2px solid black",
+        borderColor: "slate.700",
+        borderBottomWidth: "2px",
         borderRadius: "xs",
+        fontWeight: "semibold",
       })}
     >
       <h1
