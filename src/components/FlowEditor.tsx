@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { css } from "styled-system/css";
 import {
   DialogContent,
@@ -34,10 +35,13 @@ const MESSAGES = [
 export function FlowEditor({
   sprintComplete,
   stopCountdown,
+  restart,
 }: {
   sprintComplete: boolean;
   stopCountdown: () => void;
+  restart: () => void;
 }) {
+  const navigate = useNavigate();
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -45,7 +49,7 @@ export function FlowEditor({
   const [showOverlay, setShowOverlay] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
-  const reset = () => {
+  const resetCountdown = () => {
     if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
     delayTimerRef.current = null;
     if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current);
@@ -62,7 +66,7 @@ export function FlowEditor({
   };
 
   const restartTimer = () => {
-    reset();
+    resetCountdown();
     if (sprintComplete) return;
     delayTimerRef.current = setTimeout(() => {
       setShowOverlay(true);
@@ -82,12 +86,12 @@ export function FlowEditor({
   };
 
   useEffect(() => {
-    if (sprintComplete) reset();
+    if (sprintComplete) resetCountdown();
   }, [sprintComplete]);
 
   useEffect(() => {
     return () => {
-      reset();
+      resetCountdown();
     };
   }, []);
 
@@ -128,9 +132,9 @@ export function FlowEditor({
             <DialogContent
               css={{
                 padding: "0",
-                color: "stone.300",
+                color: "stone.400",
                 backgroundColor: "none",
-                fontSize: "1.2rem",
+                fontSize: "1.6rem",
                 boxShadow: "none",
                 animation: "fadein",
                 animationDuration: "2s",
@@ -147,6 +151,36 @@ export function FlowEditor({
                 {failMessage}
               </h1>
               <p>You stopped typing for too long.</p>
+              <ul
+                className={css({
+                  marginY: "2rem",
+                  listStyle: "none",
+                  "& > li": {
+                    color: "stone.500",
+                    cursor: "pointer",
+                    position: "relative",
+                    transition: "color 0.4s ease",
+                    _before: {
+                      content: '""',
+                      position: "absolute",
+                      left: "-6",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "stone.400",
+                      fontSize: "1rem",
+                    },
+                    "&:hover, &:focus-visible": {
+                      color: "stone.300",
+                      _before: {
+                        content: '"➤"',
+                      },
+                    },
+                  },
+                })}
+              >
+                <li onClick={() => restart()}>Light the spark anew</li>
+                <li onClick={() => navigate({ to: "/" })}>Return home</li>
+              </ul>
             </DialogContent>
           )}
         </DialogPortal>

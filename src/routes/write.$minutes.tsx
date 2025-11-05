@@ -30,9 +30,17 @@ export const Route = createFileRoute("/write/$minutes")({
 function Write() {
   const { minutes } = Route.useParams();
   const [complete, setComplete] = useState(false);
-  const { secondsLeft, start, pause } = useCountdown(minutes * 60, () =>
-    setComplete(true),
+  const [key, setKey] = useState(0);
+  const { secondsLeft, start, pause, restart } = useCountdown(
+    minutes * 60,
+    () => setComplete(true),
   );
+
+  const handleReset = () => {
+    setKey((prevKey) => prevKey + 1);
+    restart();
+    start();
+  };
 
   useEffect(() => {
     start();
@@ -40,6 +48,7 @@ function Write() {
 
   return (
     <div
+      key={key}
       className={css({
         display: "flex",
         flexDirection: "column",
@@ -48,7 +57,11 @@ function Write() {
       })}
     >
       <Header>{formatTime(secondsLeft)}</Header>
-      <FlowEditor sprintComplete={complete} stopCountdown={pause} />
+      <FlowEditor
+        sprintComplete={complete}
+        stopCountdown={pause}
+        restart={handleReset}
+      />
     </div>
   );
 }
