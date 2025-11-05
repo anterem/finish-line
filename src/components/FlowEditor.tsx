@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { css } from "styled-system/css";
-import { DialogOverlay, DialogPortal, DialogRoot } from "./Dialog";
+import {
+  DialogContent,
+  DialogOverlay,
+  DialogPortal,
+  DialogRoot,
+} from "./Dialog";
 
 const BLOCKED_KEYS = new Set([
   "Backspace",
@@ -17,6 +22,14 @@ const BLOCKED_KEYS = new Set([
 
 const DELAY_DURATION = 250;
 const TIMEOUT_DURATION = 5000;
+const MESSAGES = [
+  "The void claims your unfinished thoughts.",
+  "Silence descends.",
+  "The story remains untold.",
+  "Silence wins.",
+  "The flow fades.",
+  "The ink runs dry.",
+];
 
 export function FlowEditor({
   sprintComplete,
@@ -28,25 +41,33 @@ export function FlowEditor({
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const [isFading, setIsFading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [failMessage, setFailMessage] = useState("");
 
-  const clearTimers = () => {
+  const reset = () => {
     if (delayTimerRef.current) clearTimeout(delayTimerRef.current);
     delayTimerRef.current = null;
     if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current);
     timeoutTimerRef.current = null;
-    setIsFading(false);
+    setShowOverlay(false);
+  };
+
+  const handleSprintFail = () => {
+    if (editorRef.current) editorRef.current.disabled = true;
+    stopCountdown();
+    const message = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+    setFailMessage(message);
+    setShowModal(true);
   };
 
   const restartTimer = () => {
-    clearTimers();
+    reset();
     if (sprintComplete) return;
-
     delayTimerRef.current = setTimeout(() => {
-      setIsFading(true);
+      setShowOverlay(true);
       timeoutTimerRef.current = setTimeout(() => {
-        stopCountdown();
-        if (editorRef.current) editorRef.current.disabled = true;
+        handleSprintFail();
       }, TIMEOUT_DURATION);
     }, DELAY_DURATION);
   };
@@ -61,12 +82,12 @@ export function FlowEditor({
   };
 
   useEffect(() => {
-    if (sprintComplete) clearTimers();
+    if (sprintComplete) reset();
   }, [sprintComplete]);
 
   useEffect(() => {
     return () => {
-      clearTimers();
+      reset();
     };
   }, []);
 
@@ -88,7 +109,7 @@ export function FlowEditor({
         })}
         autoFocus
       />
-      <DialogRoot open={isFading}>
+      <DialogRoot open={showOverlay}>
         <DialogPortal forceMount>
           <DialogOverlay
             css={{
@@ -101,7 +122,24 @@ export function FlowEditor({
               },
               _closed: { display: "none" },
             }}
+            style={{ pointerEvents: "none" }}
           />
+          {showModal && (
+            <DialogContent
+              css={{
+                padding: "0",
+                color: "stone.300",
+                backgroundColor: "none",
+                boxShadow: "none",
+                animation: "fadein",
+                animationDuration: "2s",
+              }}
+            >
+              <h1 className={css({ fontSize: "2rem", fontStyle: "italic" })}>
+                {failMessage}
+              </h1>
+            </DialogContent>
+          )}
         </DialogPortal>
       </DialogRoot>
     </>
