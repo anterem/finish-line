@@ -142,6 +142,7 @@ export function FlowEditor({
                 color: "stone.400",
                 backgroundColor: "none",
                 fontSize: "1.6rem",
+                outline: "none",
                 boxShadow: "none",
                 animation: "fadein",
                 animationDuration: "2s",
